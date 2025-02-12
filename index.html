@@ -13,47 +13,65 @@
     </div>
 
     <script>
-
-        const targetLat = 52.0693738; // Set your latitude
-        const targetLon = 4.6434959; // Set your longitude
-        const radius = 50; // Allowed distance in meters
-
-        function getLocation() {
-            if ("geolocation" in navigator) {
-                navigator.geolocation.getCurrentPosition(checkDistance, showError);
-            } else {
-                document.getElementById("status").innerText = "Geolocation is not supported.";
+        // Locations data (add as many as you want)
+        const locations = [
+            {lat: 51.5885, lon: 4.7750, link: "https://example.com/next-question-1"},
+            {lat: 51.5890, lon: 4.7760, link: "https://example.com/next-question-2"},
+            {lat: 51.5900, lon: 4.7770, link: "https://example.com/next-question-3"},
+            {lat: 51.5910, lon: 4.7780, link: "https://example.com/next-question-4"},
+            {lat: 51.5920, lon: 4.7790, link: "https://example.com/next-question-5"}
+        ];
+    
+        // Function to check the user's location and go to the URL if they're at a correct location
+        function checkUserLocation(userLat, userLon) {
+            let foundLocation = false;
+            
+            // Loop through the list of locations
+            for (let i = 0; i < locations.length; i++) {
+                const location = locations[i];
+    
+                // Calculate the distance to the location (using Haversine formula)
+                const distance = getDistance(userLat, userLon, location.lat, location.lon);
+    
+                // If within range (e.g., 50 meters), go to the next question
+                if (distance <= 50) { // 50 meters
+                    window.location.href = location.link;
+                    foundLocation = true;
+                    break;  // Stop the loop if we found the correct location
+                }
+            }
+    
+            // If no valid location was found, alert the user
+            if (!foundLocation) {
+                alert("You are not near any of the valid locations. Please move closer.");
             }
         }
-
-        function checkDistance(position) {
+    
+        // Helper function to calculate the distance between two lat/lon points (Haversine formula)
+        function getDistance(lat1, lon1, lat2, lon2) {
+            const R = 6371e3; // Earth radius in meters
+            const φ1 = lat1 * Math.PI / 180;
+            const φ2 = lat2 * Math.PI / 180;
+            const Δφ = (lat2 - lat1) * Math.PI / 180;
+            const Δλ = (lon2 - lon1) * Math.PI / 180;
+    
+            const a = Math.sin(Δφ / 2) * Math.sin(Δφ / 2) +
+                      Math.cos(φ1) * Math.cos(φ2) *
+                      Math.sin(Δλ / 2) * Math.sin(Δλ / 2);
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+            const distance = R * c; // in meters
+    
+            return distance;
+        }
+    
+        // Example usage (call the function with the user's actual lat/lon)
+        // Replace with actual method to get the user's geolocation
+        navigator.geolocation.getCurrentPosition(function(position) {
             const userLat = position.coords.latitude;
             const userLon = position.coords.longitude;
-
-            const distance = calculateDistance(userLat, userLon, targetLat, targetLon);
-            if (distance <= radius) {
-                document.getElementById("status").innerText = "You are in the correct location!";
-                document.getElementById("link-container").style.display = "block";
-            } else {
-                document.getElementById("status").innerText = "You're too far away sukkel.";
-            }
-        }
-
-        function calculateDistance(lat1, lon1, lat2, lon2) {
-            const R = 6371e3;
-            const φ1 = lat1 * Math.PI / 180, φ2 = lat2 * Math.PI / 180;
-            const Δφ = (lat2 - lat1) * Math.PI / 180, Δλ = (lon2 - lon1) * Math.PI / 180;
-            const a = Math.sin(Δφ / 2) * Math.sin(Δφ / 2) +
-                      Math.cos(φ1) * Math.cos(φ2) * Math.sin(Δλ / 2) * Math.sin(Δλ / 2);
-            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-            return R * c;
-        }
-
-        function showError(error) {
-            document.getElementById("status").innerText = "Location access denied.";
-        }
-
-        getLocation();
+            
+            checkUserLocation(userLat, userLon);
+        });
     </script>
 </body>
 </html>
