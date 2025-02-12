@@ -14,51 +14,59 @@
 
     <script>
         // Locations data (add as many as you want)
-        const locations = [
-            {lat: 52.0693, lon: 4.6435, link: "https://www.youtube.com/?gl=NL&hl=nl"},
-            {lat: 51.5890, lon: 4.7760, link: "https://example.com/next-question-2"},
-            {lat: 51.5900, lon: 4.7770, link: "https://example.com/next-question-3"},
-            {lat: 51.5910, lon: 4.7780, link: "https://example.com/next-question-4"},
-            {lat: 51.5920, lon: 4.7790, link: "https://example.com/next-question-5"}
-        ];
-    
-        // Function to check the user's location and go to the URL if they're at a correct location
-        function checkUserLocation(userLat, userLon) {
-            let foundLocation = false;
-            
-            // Loop through the list of locations
-            for (let i = 0; i < locations.length; i++) {
-                const location = locations[i];
-    
-                // Calculate the distance to the location (using Haversine formula)
-                const correct = correct_location(userLat, userLon, location.lat, location.lon);
-    
-                // If within range (e.g., 50 meters), go to the next question
-                if (correct) { // 50 meters
-                    window.location.href = location.link;
-                    foundLocation = true;
-                    break;  // Stop the loop if we found the correct location
-                }
-            }
-    
-            // If no valid location was found, alert the user
-            if (!foundLocation) {
-                // alert("You are not near any of the valid locations. Please move closer.");
+
+
+        let locations = []; // Define locations globally
+
+        async function loadLocations() {
+            // Check if we're running locally or on GitHub Pages
+            const filePath = window.location.hostname === "127.0.0.1" ? "locations.json" : "https://github.com/bertvanlange/geolocked-links/locations.json";
+            try {
+                // Fetch the JSON file from the correct path
+                const response = await fetch(filePath);
+                let l_temp = await response.json();
+                locations = l_temp.locations
+                console.log(locations);  // Display the locations in the console
+
+                // Continue with your logic to handle the locations here...
+            } catch (error) {
+                console.error("Error loading locations:", error);
             }
         }
-    
+
+
+        function checkUserLocation(userLat, userLon) {
+            console.log(locations)
+            if (locations.length === 0) {
+                console.error("Locations not loaded yet.");
+                return;
+            }
+
+            locations.forEach(location => {
+                const loc = op_loc(userLat, userLon, location.lat, location.lon);
+
+                if (loc) {  // Example distance threshold (in km)
+                console.log("You're near this location! Link:", location.link);
+                window.location.href = location.link; // Redirect to the location link
+                return;
+                }
+            });
+
+            console.log("You are not near any location.");
+            }
+
         // Helper function to calculate the distance between two lat/lon points (Haversine formula)
-        function correct_location(lat1, lon1, lat2, lon2) {
-            const R = 6371e3; 
+        function op_loc(lat1, lon1, lat2, lon2) {
+            const R = 6371e3; // Earth radius in meters
             const φ1 = lat1 * Math.PI / 180;
-            const φ2 = lat2 * Math.PI / 180;s
+            const φ2 = lat2 * Math.PI / 180;
             const Δφ = (lat2 - lat1) * Math.PI / 180;
             const Δλ = (lon2 - lon1) * Math.PI / 180;
     
             const a = Math.sin(Δφ / 2) * Math.sin(Δφ / 2) +
                       Math.cos(φ1) * Math.cos(φ2) *
                       Math.sin(Δλ / 2) * Math.sin(Δλ / 2);
-            if(2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a)) < 0.00000313922){
+            if(2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a)) < 10/6371e3){
                 return true
             }else{
                 return false
@@ -70,8 +78,9 @@
         navigator.geolocation.getCurrentPosition(function(position) {
             const userLat = position.coords.latitude;
             const userLon = position.coords.longitude;
-            
-            checkUserLocation(userLat, userLon);
+            console.log(userLat)
+            console.log(userLon)
+            loadLocations().then(() => {checkUserLocation(userLat, userLon);});
         });
     </script>
 </body>
