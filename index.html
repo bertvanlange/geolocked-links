@@ -19,6 +19,7 @@
         let locations = []; // Define locations globally
 
         async function loadLocations() {
+// https://github.com/bertvanlange/geolocked-links/settings
             // Check if we're running locally or on GitHub Pages
             const filePath = window.location.hostname === "127.0.0.1" ? "locations.json" : "https://github.com/bertvanlange/geolocked-links/locations.json";
             try {
