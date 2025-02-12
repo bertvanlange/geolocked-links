@@ -11,6 +11,7 @@
     <div id="link-container" style="display:none;">
         <a id="secret-link" href="https://example.com" target="_blank">Click here to continue</a>
     </div>
+    <a href="track_1.html">Go to Page 1</a>
 
     <script>
         // Locations data (add as many as you want)
@@ -19,7 +20,6 @@
         let locations = []; // Define locations globally
 
         async function loadLocations() {
-// https://github.com/bertvanlange/geolocked-links/settings
             // Check if we're running locally or on GitHub Pages
             const filePath = window.location.hostname === "127.0.0.1" ? "locations.json" : "https://raw.githubusercontent.com/bertvanlange/geolocked-links/refs/heads/main/locations.json";
             try {
