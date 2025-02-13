@@ -3,86 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Geolocked Link</title>
+    <title>Explosief zaterdag middag spel</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <h1>Checking your location...</h1>
-    <p id="status">Please allow location access.</p>
-    <div id="link-container" style="display:none;">
-        <a id="secret-link" href="https://example.com" target="_blank">Click here to continue</a>
-    </div>
-    <a href="track_1.html">Go to Page 1</a>
+    <h1>Explosief za-mi sp hooft pagina</h1>
 
-    <script>
-        // Locations data (add as many as you want)
+    <p id="status">kies een track om te controleren op je op de juiste locatie bent en je de nieuwe aanwijzig kan ontvangen
+    </p>
 
 
-        let locations = []; // Define locations globally
+    <a href="track_1.html">track 1:  breda's historie</a><br>
 
-        async function loadLocations() {
-            // Check if we're running locally or on GitHub Pages
-            const filePath = window.location.hostname === "127.0.0.1" ? "locations.json" : "https://raw.githubusercontent.com/bertvanlange/geolocked-links/refs/heads/main/locations.json";
-            try {
-                // Fetch the JSON file from the correct path
-                const response = await fetch(filePath);
-                let l_temp = await response.json();
-                locations = l_temp.locations
-                console.log(locations);  // Display the locations in the console
+    <a href="track_2.html">track 2: "huidige" cultuur snuiven</a><br>
 
-                // Continue with your logic to handle the locations here...
-            } catch (error) {
-                console.error("Error loading locations:", error);
-            }
-        }
+    <a href="track_3.html">track 3: bier en broodjes</a><br>
 
-
-        function checkUserLocation(userLat, userLon) {
-            console.log(locations)
-            if (locations.length === 0) {
-                console.error("Locations not loaded yet.");
-                return;
-            }
-
-            locations.forEach(location => {
-                const loc = op_loc(userLat, userLon, location.lat, location.lon);
-
-                if (loc) {  // Example distance threshold (in km)
-                console.log("You're near this location! Link:", location.link);
-                window.location.href = location.link; // Redirect to the location link
-                return;
-                }
-            });
-
-            console.log("You are not near any location.");
-            }
-
-        // Helper function to calculate the distance between two lat/lon points (Haversine formula)
-        function op_loc(lat1, lon1, lat2, lon2) {
-            const R = 6371e3; // Earth radius in meters
-            const φ1 = lat1 * Math.PI / 180;
-            const φ2 = lat2 * Math.PI / 180;
-            const Δφ = (lat2 - lat1) * Math.PI / 180;
-            const Δλ = (lon2 - lon1) * Math.PI / 180;
-    
-            const a = Math.sin(Δφ / 2) * Math.sin(Δφ / 2) +
-                      Math.cos(φ1) * Math.cos(φ2) *
-                      Math.sin(Δλ / 2) * Math.sin(Δλ / 2);
-            if(2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a)) < 10/6371e3){
-                return true
-            }else{
-                return false
-            }
-        }
-    
-        // Example usage (call the function with the user's actual lat/lon)
-        // Replace with actual method to get the user's geolocation
-        navigator.geolocation.getCurrentPosition(function(position) {
-            const userLat = position.coords.latitude;
-            const userLon = position.coords.longitude;
-            console.log(userLat)
-            console.log(userLon)
-            loadLocations().then(() => {checkUserLocation(userLat, userLon);});
-        });
-    </script>
 </body>
 </html>

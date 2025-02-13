@@ -1,0 +1,10 @@
+{
+    "locations": [
+        {"lat":52.2224557, "lon": 4.4915152,  "link": "https://www.youtube.com/?gl=NL&hl=nl"},
+        {"lat": 51.5890, "lon": 4.7760, "link": "https://example.com/next-question-2"},
+        {"lat": 51.5900, "lon": 4.7770, "link": "https://example.com/next-question-3"},
+        {"lat": 51.5910, "lon": 4.7780, "link": "https://example.com/next-question-4"},
+        {"lat": 51.5920, "lon": 4.7790, "link": "https://example.com/next-question-5"}
+    ]
+  }
+  
