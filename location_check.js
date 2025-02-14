@@ -10,6 +10,7 @@
             // Fetch the JSON file from the correct path
             const response = await fetch(filePath);
             let l_temp = await response.json();
+            console.log(l_temp);  // Display the locations in the console
             locations = l_temp.locations
             console.log(locations);  // Display the locations in the console
 
@@ -51,7 +52,7 @@
         const a = Math.sin(Δφ / 2) * Math.sin(Δφ / 2) +
                   Math.cos(φ1) * Math.cos(φ2) *
                   Math.sin(Δλ / 2) * Math.sin(Δλ / 2);
-        if(2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a)) < 10/6371e3){
+        if(2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a)) < 20/6371e3){
             return true
         }else{
             return false
